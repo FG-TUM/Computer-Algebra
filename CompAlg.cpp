@@ -30,6 +30,9 @@ int main(void) {
 
 	int z = 0;
 
+	const int j = 32;
+	bitset<j> jo = bitset<j>(x);
+
 	bitset<bitsetSize> x_bin = convertToBitset(x);
 	bitset<bitsetSize> y_bin = convertToBitset(y);
 	bitset<bitsetSize> t_bin = x_bin & y_bin;
@@ -71,7 +74,7 @@ int karatsuba(bitset<bitsetSize> x, bitset<bitsetSize> y) {
 		return gridMul(x,y);
 //	B = 2^2^(k-1)
 	int B = 1 << (1 << (k-1));
-//	int x1 =
+//	bitset<(1<<(k-1))> x1 =
 
 	return k;
 }
