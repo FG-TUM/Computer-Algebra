@@ -7,10 +7,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <vector>
 #include <sstream>
 #include <iterator>
 #include <string>
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
@@ -24,13 +26,14 @@ inline int gridMul(vector<bool> x, vector<bool> y);
 /*
  * resizes and adds two binary numbers
  */
-inline vector<bool> binAdd(vector<bool> a, vector<bool> b);
-inline void resize(vector<bool> *a, vector<bool> *b);
+inline boost::dynamic_bitset<> binAdd(boost::dynamic_bitset<> *a,
+		boost::dynamic_bitset<> *b);
+inline void resize(boost::dynamic_bitset<> *a, boost::dynamic_bitset<> *b);
 /**
  * TODO: currently only terminates for positive ints
  */
 vector<bool> intToVec(int n);
-string vecToString(vector<bool> vec);
+string bitsetToString(boost::dynamic_bitset<> vec);
 
 int main(int argc, char *argv[]) {
 
@@ -54,46 +57,60 @@ int main(int argc, char *argv[]) {
 	}
 
 	//	convert to binary representation
-	vector<bool> x_vec = intToVec(x);
-	vector<bool> y_vec = intToVec(y);
+	boost::dynamic_bitset<> x_bit(floor(log2(x)) + 1, x);
+	boost::dynamic_bitset<> y_bit(floor(log2(y)) + 1, y);
 
-	printf("x_vec\t= %s\n", vecToString(x_vec).c_str());
-	printf("y_vec\t= %s\n", vecToString(y_vec).c_str());
+	printf("x_bit\t= %s\n", bitsetToString(x_bit).c_str());
+	printf("y_bit\t= %s\n", bitsetToString(y_bit).c_str());
 
-//	vector<bool> z_vec = gridMul(x_vec, y_vec);
-//	printf("z_vec\t= %s\n", vecToString(z_vec).c_str());
+	boost::dynamic_bitset<> z_bit = binAdd(&x_bit, &y_bit);
 
-	printf("x \t= %d\n", x);
-	printf("y \t= %d\n", y);
-	int z = gridMul(x_vec, y_vec);
-	printf("z \t= %d\n", z);
+	printf("SERIOUS STUFF HAPPENED\n");
+	printf("x_bit\t= %s\n", bitsetToString(x_bit).c_str());
+	printf("y_bit\t= %s\n", bitsetToString(y_bit).c_str());
+	printf("z_bit\t= %s\n", bitsetToString(z_bit).c_str());
+//	boost::dynamic_bitset<> z_bit = bitsetToString(x_vec, y_vec);
+//	printf("z_bit\t= %s\n", bitsetToString(z_vec).c_str());
+//
+	printf("x \t= %ld\n", x_bit.to_ulong());
+	printf("y \t= %ld\n", y_bit.to_ulong());
+	printf("z \t= %ld\n", z_bit.to_ulong());
 }
 
 inline int gridMul(vector<bool> *x, vector<bool> *y) {
 	int z = 0;
-	for (unsigned int i = 0; i < (*x).size(); ++i) {
-		if (x[i] != 0)
-			for (unsigned int j = 0; j < (*y).size(); ++j) {
-//				(1 << (i+j) = 1 * 2^(i+j)
-				z += y[j] * (1 << (i + j));
-			}
-	}
+//	for (unsigned int i = 0; i < (*x).size(); ++i) {
+//		if (x[i] != 0)
+//			for (unsigned int j = 0; j < (*y).size(); ++j) {
+////				(1 << (i+j) = 1 * 2^(i+j)
+//				z += y[j] * (1 << (i + j));
+//			}
+//	}
 	return z;
 }
 
-inline vector<bool> binAdd(vector<bool> *a, vector<bool> *b) {
-	resize(a,b);
-	vector<bool> result;
+inline boost::dynamic_bitset<> binAdd(boost::dynamic_bitset<> *a,
+		boost::dynamic_bitset<> *b) {
+	resize(a, b);
+	boost::dynamic_bitset<> result;
 	bool carry = 0;
-	for (int i = 0; i < (*a).size(); ++i) {
-		result.push_back((bool)(a[i]^b[i]^carry));
-		carry = ((bool) b[i] & (bool) carry) | ((bool) a[i] & (bool) b[i])
-				| (bool) (a[i] & (bool) carry);
+	for(unsigned int i = 0; i < a->size(); ++i){
+		result.push_back((*a)[i]^(*b)[i] ^ carry);
+		carry = ((*b)[i] &  carry) | ( (*a)[i] &  (*b)[i]) |  ((*a)[i] &  carry);
 	}
+	if(carry)
+		result.push_back(1);
 	return result;
 }
 
-inline void resize(vector<bool> *a, vector<bool> *b) {
+
+//	for (int i = 0; i < (*a).size(); ++i) {
+//		result.push_back((bool)(a[i]^b[i]^carry));
+//		carry = ((bool) b[i] & (bool) carry) | ((bool) a[i] & (bool) b[i])
+//				| (bool) (a[i] & (bool) carry);
+//	}
+
+inline void resize(boost::dynamic_bitset<> *a, boost::dynamic_bitset<> *b) {
 	int sizediff = (*a).size() - (*b).size();
 //	a > b
 	if (sizediff > 0) {
@@ -122,13 +139,13 @@ vector<bool> intToVec(int n) {
 	return vec;
 }
 
-string vecToString(vector<bool> vec) {
+string bitsetToString(boost::dynamic_bitset<> bitset) {
 	ostringstream oss;
-
-	if (!vec.empty()) {
-		copy(vec.begin(), vec.end() - 1, ostream_iterator<bool>(oss, " "));
-		oss << vec.back();
+	for (unsigned int i = bitset.size() - 1; i > 0; --i) {
+		oss << bitset[i] << " ";
 	}
+	oss << bitset[0];
+
 	return oss.str();
 
 }
