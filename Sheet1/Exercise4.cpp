@@ -36,21 +36,20 @@ inline bitset<bitsetSize> binSub(bitset<bitsetSize> a, bitset<bitsetSize> b);
 int main(void) {
 
 	int x = 42;
-	int y = 12;
+	int y = -12;
 
 	bitset<bitsetSize> x_bin(x);
 	bitset<bitsetSize> y_bin(y);
-	bitset<bitsetSize> t_bin = karatsuba(x_bin, y_bin);
+	bitset<bitsetSize> z_bin = karatsuba(x_bin, y_bin);
 
 //
 	printf("x_bin \t= %s\n", x_bin.to_string().c_str());
 	printf("y_bin \t= %s\n", y_bin.to_string().c_str());
-	printf("t_bin \t= %s\n", t_bin.to_string().c_str());
-//	printf("x = %d\n", x);
-//	printf("y = %d\n", y);
-//	printf("x*y: \t%d\n", t);
-	printf("CHECK: \t%d\n", x * y);
-//	printf("z = %d\n", z);
+	printf("z_bin \t= %s\n", z_bin.to_string().c_str());
+	printf("x \t= %d\n", x);
+	printf("y \t= %d\n", y);
+	printf("z \t= %lu\n", z_bin.to_ulong());
+	printf("CHECK \t: %d\n", x * y);
 
 	return EXIT_SUCCESS;
 }
