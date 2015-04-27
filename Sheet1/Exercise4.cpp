@@ -10,11 +10,13 @@
 #include <algorithm> // max
 #include <math.h> //log2, ceil
 #include <bitset>
-//#include <string>
+#include <sstream>
 
 using namespace std;
 
+// uncomment this and recompile for very verbose output
 //#define DEBUG
+// set size for the used bitsets. 32 as integers are also 32 bit.
 #define bitsetSize 32
 
 bitset<bitsetSize> karatsuba(bitset<bitsetSize> x, bitset<bitsetSize> y);
@@ -32,17 +34,33 @@ inline bitset<bitsetSize> copyBitsTo(bitset<bitsetSize> source, int start,
 inline bitset<bitsetSize> binAdd(bitset<bitsetSize> a, bitset<bitsetSize> b);
 inline bitset<bitsetSize> binSub(bitset<bitsetSize> a, bitset<bitsetSize> b);
 
-// set size for the used bitsets. 32 as integers are also 32 bit.
-int main(void) {
+int main(int argc, char *argv[]) {
 
-	int x = 42;
-	int y = -12;
+	if (argc != 3) {
+		printf("bad number of arguments!\n");
+		printf("usage: %s x y\n", argv[0]);
+		return EXIT_FAILURE;
+	}
 
+//	parse input
+	stringstream ss;
+	ss << argv[1] << ' ' << argv[2];
+	int x, y;
+	if (!(ss >> x)) {
+		printf("first argument is not a valid number!\n");
+		return EXIT_FAILURE;
+	}
+	if (!(ss >> y)) {
+		printf("second argument is not a valid number!\n");
+		return EXIT_FAILURE;
+	}
+
+//	convert to binary representation
 	bitset<bitsetSize> x_bin(x);
 	bitset<bitsetSize> y_bin(y);
+	printf("starting calculation...\n");
 	bitset<bitsetSize> z_bin = karatsuba(x_bin, y_bin);
 
-//
 	printf("x_bin \t= %s\n", x_bin.to_string().c_str());
 	printf("y_bin \t= %s\n", y_bin.to_string().c_str());
 	printf("z_bin \t= %s\n", z_bin.to_string().c_str());
