@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 	printf("y_bit\t= %s\n", bitsetToString(y_bit).c_str());
 
 	boost::dynamic_bitset<> z_bit = binAdd(&x_bit, &y_bit);
-
+	x_bit <<= 1;
 	printf("SERIOUS STUFF HAPPENED\n");
 	printf("x_bit\t= %s\n", bitsetToString(x_bit).c_str());
 	printf("y_bit\t= %s\n", bitsetToString(y_bit).c_str());
