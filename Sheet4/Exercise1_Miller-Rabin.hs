@@ -1,7 +1,7 @@
 import Data.Bits
 
 millerRabinTest2to10000 :: Integer -> Bool
-millerRabinTest2to10000 n = or [millerRabinTestA n a | a <- [2..10000]]
+millerRabinTest2to10000 n = and [millerRabinTestA n a | a <- [2..10000]]
 
 millerRabinTestA :: Integer -> Integer -> Bool
 millerRabinTestA n a
@@ -41,10 +41,10 @@ main = do
   putStr "number of False = "
   print falses
   putStr "success rate = "
-  if res == True then print $ realToFrac(trueses) / 10000 else print $ (realToFrac falses) / 10000
+  if res == True then print $ realToFrac(trueses) / 9999 else print $ (realToFrac falses) / 9999
   where n = 225593397919
         resList = [millerRabinTestA n a | a <- [2..10000]]
-        res = or resList
+        res = and resList
         trueses = length $ filter (\x -> x == True) resList
         falses = length $ filter (\x -> x == False) resList
         l = [trueses, falses]
