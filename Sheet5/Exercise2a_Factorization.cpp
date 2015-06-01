@@ -10,11 +10,17 @@ int eulerPhi(int n);
 int myRand(int min, int max);
 bool isInIntList(int a, std::list<int> l);
 bool isPrime(int n);
+void coef(int n, long long* c);
 
 int main(void)
 {
+    // TEST AREA. FOR SCIENCE!
+    int n = 10;
+    printf("isPrime(%d) = %d\n", n, isPrime(n) );
+    return 42;
+
     srand(time(0));
-    int n = 13*7*89;
+    //int n = 13*7*89;
     int tmp;
     std::list<int> factors;
     int prodFacs = 1;
@@ -23,8 +29,8 @@ int main(void)
         //printf("tmp = %d\n", tmp);
         if(!isInIntList(tmp, factors) && tmp > 1 && isPrime(tmp)){
             factors.push_back(tmp);
-            prodFacs = prodFacs*tmp;
             printf("factor added %d\n",tmp);
+            prodFacs = prodFacs*tmp;
         }
     }
     return 0;
@@ -35,22 +41,18 @@ int findDivisor(int n, int m){
     int a = myRand(2, (n-2));
     int k = m;
     int d = gcd(a,n);
-    //printf("find divisor: n=%d \tm=%d \ta=%d \td=%d\n", n, m, a, d);
     if(d != 1)
         return d;
 
     while(1){
         d = gcd(n, pow(a,k)-1);
         if(d == 1){
-            //printf("returned in case 1\n");
             return findDivisor(n, m);
         }
         if(d > 1 && d < n){
-            //printf("returned in case 2\n");
             return d;
         }
         if(k % 2 == 1){
-            //printf("returned in case 3\n");
             return findDivisor(n, m);
         }
         k=k/2;
@@ -58,7 +60,36 @@ int findDivisor(int n, int m){
     return -1; //error value, this case should never happen
 }
 
+/*
+ * calculates the first half of coefficients of the polynomial (x+1)^n (mod n)
+ */
+void coef(int n, long long* c){
+
+    c[0] = 1;
+    for(int k = 1; k <= n/2; ++k){
+        //    c[k]=1;
+        //c[k] = c[k] * ((double)(n+1-j)/j);
+        //c[k] = (c[k-1] * ((n+1-k)%n) %n) / k;
+        printf("(n+1-%d)=%d\n", k, (n+1-k));
+        printf("(n+1-%d)mod %d = %d\n", k,n, (n+1-k)%n);
+        if(c[k-1] == 0)
+            c[k] = ((n+1-k)%n) / k;
+        else {
+            c[k] = (c[k-1] * ((n+1-k)%n) %n) / k;
+
+        }
+    }
+}
+
 bool isPrime(int n){
+    long long a[n/2];
+    coef(n, a);
+    for(int i = 1; i< (n/2); ++i){
+        printf("a[%d] = %lld\n", i, a[i]);
+        if(a[i]){
+            return false;
+        }
+    }
     return true;
 }
 
@@ -73,7 +104,7 @@ bool isInIntList(int a, std::list<int> l){
 }
 
 int myRand(int min, int max){
-// random number between 2 and (n-2) = rand() % (max-min+1)+min
+    // random number between 2 and (n-2) = rand() % (max-min+1)+min
     return rand() % (max-min+1) + min;
 }
 
