@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <ctime>
+#include <list>
 
 int findDivisor(int n, int m);
 int gcd(int a,int b);
 int eulerPhi(int n);
 int myRand(int min, int max);
-bool isInArray(int a, int* arrayi, int length);
+bool isInIntList(int a, std::list<int> l);
 bool isPrime(int n);
 
 int main(void)
@@ -15,15 +16,13 @@ int main(void)
     srand(time(0));
     int n = 13*7*89;
     int tmp;
-    int* factors = (int*) malloc(sizeof(int));
-    int numFacs = 0;
+    std::list<int> factors;
     int prodFacs = 1;
     while(prodFacs != n){
         tmp = findDivisor(n, myRand(1,n)*eulerPhi(n));
         //printf("tmp = %d\n", tmp);
-        if(!isInArray(tmp, factors, numFacs) && tmp > 1 && isPrime(tmp)){
-            factors[numFacs] = tmp;
-            numFacs++;
+        if(!isInIntList(tmp, factors) && tmp > 1 && isPrime(tmp)){
+            factors.push_back(tmp);
             prodFacs = prodFacs*tmp;
             printf("factor added %d\n",tmp);
         }
@@ -60,13 +59,13 @@ int findDivisor(int n, int m){
 }
 
 bool isPrime(int n){
-
+    return true;
 }
 
 
-bool isInArray(int a, int* array, int length){
-    for(int i = 0; i < length; ++i){
-        if(array[i] == a){
+bool isInIntList(int a, std::list<int> l){
+    for(std::list<int>::iterator i = l.begin(); i != l.end(); ++i){
+        if(*i == a){
             return true;
         }
     }
