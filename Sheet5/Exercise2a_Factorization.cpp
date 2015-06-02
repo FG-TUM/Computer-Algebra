@@ -15,7 +15,7 @@ void coef(int n, long long* c);
 int main(void)
 {
     // TEST AREA. FOR SCIENCE!
-    int n = 10;
+    int n = 89;
     printf("isPrime(%d) = %d\n", n, isPrime(n) );
     return 42;
 
@@ -62,6 +62,7 @@ int findDivisor(int n, int m){
 
 /*
  * calculates the first half of coefficients of the polynomial (x+1)^n (mod n)
+ * OBSOLETE
  */
 void coef(int n, long long* c){
 
@@ -82,13 +83,15 @@ void coef(int n, long long* c){
 }
 
 bool isPrime(int n){
-    long long a[n/2];
-    coef(n, a);
-    for(int i = 1; i< (n/2); ++i){
-        printf("a[%d] = %lld\n", i, a[i]);
-        if(a[i]){
+    int c = n;
+    for(int k = 2; k<= (n/2); ++k){
+        //c *= (double)(n+1-k)/k;
+        c *= (double)(n+1-k)/k; // works bur only for small n -> Overflow
+        printf("bin(%d, %d) = %d (mod %d)\n", n, k, c, n);
+        if(c%n != 0) {
             return false;
         }
+
     }
     return true;
 }
