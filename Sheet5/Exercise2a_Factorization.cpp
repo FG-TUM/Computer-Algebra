@@ -8,34 +8,59 @@ int findDivisor(int n, int m);
 int gcd(int a,int b);
 int eulerPhi(int n);
 int myRand(int min, int max);
-bool isInIntList(int a, std::list<int> l);
-bool isPrime(int n);
-void coef(int n, long long* c);
 
 int main(void)
 {
     // TEST AREA. FOR SCIENCE!
-    int n = 89;
+/*    int n = 1;
     printf("isPrime(%d) = %d\n", n, isPrime(n) );
     return 42;
-
+*/
     srand(time(0));
-    //int n = 13*7*89;
+    // number to test
+    int n = 13*7*89*3;
     int tmp;
+    //here all found factors will be saved
     std::list<int> factors;
     int prodFacs = 1;
+    // repeat until all primefactors are found
     while(prodFacs != n){
+        // tmp is the factor we are about to find
         tmp = findDivisor(n, myRand(1,n)*eulerPhi(n));
-        //printf("tmp = %d\n", tmp);
-        if(!isInIntList(tmp, factors) && tmp > 1 && isPrime(tmp)){
-            factors.push_back(tmp);
-            printf("factor added %d\n",tmp);
-            prodFacs = prodFacs*tmp;
+        if(tmp > 1){
+            // check whether tmp should be saved
+            bool added = false;
+            for(std::list<int>::iterator i = factors.begin(); i != factors.end(); ++i){
+                // when tmp is already in the list or is divisible
+                // by a factor in the list there is nothing to do
+                if(tmp == *i || tmp % *i == 0){
+                    added = true;
+                    break;
+                }
+                // if tmp divides a factor, the factor is replaced
+                if(*i % tmp == 0){
+                    printf("factor %d replaced by %d\n", *i, tmp);
+                    prodFacs = prodFacs / (*i);
+                    prodFacs = prodFacs*tmp;
+                    *i = tmp;
+                    added = true;
+                    break;
+                }
+            }
+            // add factor to the list when above criteria don't hold
+            if(!added){
+                factors.push_back(tmp);
+                printf("factor added %d\n",tmp);
+                prodFacs = prodFacs*tmp;
+            }
         }
     }
     return 0;
 }
 
+/*
+ * Algorithm 1 §4 from the lecture
+ */
 int findDivisor(int n, int m){
     // random number between 2 and (n-2);
     int a = myRand(2, (n-2));
@@ -61,55 +86,9 @@ int findDivisor(int n, int m){
 }
 
 /*
- * calculates the first half of coefficients of the polynomial (x+1)^n (mod n)
- * OBSOLETE
+ * random number between 2 and (n-2) = rand() % (max-min+1)+min
  */
-void coef(int n, long long* c){
-
-    c[0] = 1;
-    for(int k = 1; k <= n/2; ++k){
-        //    c[k]=1;
-        //c[k] = c[k] * ((double)(n+1-j)/j);
-        //c[k] = (c[k-1] * ((n+1-k)%n) %n) / k;
-        printf("(n+1-%d)=%d\n", k, (n+1-k));
-        printf("(n+1-%d)mod %d = %d\n", k,n, (n+1-k)%n);
-        if(c[k-1] == 0)
-            c[k] = ((n+1-k)%n) / k;
-        else {
-            c[k] = (c[k-1] * ((n+1-k)%n) %n) / k;
-
-        }
-    }
-}
-
-bool isPrime(int n){
-    int c = n;
-    for(int k = 2; k<= (n/2); ++k){
-        //c *= (double)(n+1-k)/k;
-        c *= (double)(n+1-k)/k; // works bur only for small n -> Overflow
-        printf("bin(%d, %d) = %d (mod %d)\n", n, k, c, n);
-        if(c%n != 0) {
-            return false;
-        }
-// IDEA: check if factors to next coefficients are comma free numbers
-//
-// actually primality test is overkill as RSA numbers only have two factors
-    }
-    return true;
-}
-
-
-bool isInIntList(int a, std::list<int> l){
-    for(std::list<int>::iterator i = l.begin(); i != l.end(); ++i){
-        if(*i == a){
-            return true;
-        }
-    }
-    return false;
-}
-
 int myRand(int min, int max){
-    // random number between 2 and (n-2) = rand() % (max-min+1)+min
     return rand() % (max-min+1) + min;
 }
 
