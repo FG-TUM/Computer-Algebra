@@ -91,7 +91,9 @@ bool isPrime(int n){
         if(c%n != 0) {
             return false;
         }
-
+// IDEA: check if factors to next coefficients are comma free numbers
+//
+// actually primality test is overkill as RSA numbers only have two factors
     }
     return true;
 }
