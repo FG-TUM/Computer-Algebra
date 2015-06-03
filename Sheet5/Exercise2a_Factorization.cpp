@@ -9,51 +9,66 @@ int gcd(int a,int b);
 int eulerPhi(int n);
 int myRand(int min, int max);
 
+/*
+ * solution:
+ * n = 48007 = 61*787
+ *
+ * Output when running:
+ * factor added 61
+ * factor added 787
+ */
+
 int main(void)
 {
-    // TEST AREA. FOR SCIENCE!
-/*    int n = 1;
-    printf("isPrime(%d) = %d\n", n, isPrime(n) );
-    return 42;
-*/
+    // some random seed
     srand(time(0));
     // number to test
-    int n = 13*7*89*3;
+    //int n = 13*7*89*3;
+    int n = 48007;
+    int e = 1493;
+    int f = 4517;
+    // this will be the candidate for a prime-factor
     int tmp;
     //here all found factors will be saved
     std::list<int> factors;
+    // product of all factors found so far
     int prodFacs = 1;
-    // repeat until all primefactors are found
+    // repeat until exactly all prime-factors are found
     while(prodFacs != n){
-        // tmp is the factor we are about to find
-        tmp = findDivisor(n, myRand(1,n)*eulerPhi(n));
-        if(tmp > 1){
-            // check whether tmp should be saved
-            bool added = false;
-            for(std::list<int>::iterator i = factors.begin(); i != factors.end(); ++i){
-                // when tmp is already in the list or is divisible
-                // by a factor in the list there is nothing to do
-                if(tmp == *i || tmp % *i == 0){
-                    added = true;
-                    break;
-                }
-                // if tmp divides a factor, the factor is replaced
-                if(*i % tmp == 0){
-                    printf("factor %d replaced by %d\n", *i, tmp);
-                    prodFacs = prodFacs / (*i);
-                    prodFacs = prodFacs*tmp;
-                    *i = tmp;
-                    added = true;
-                    break;
-                }
+        // tmp is the factor we are about to find.
+        // In general the second argument should be a random
+        // multiple of phi(n). Here e*f = 1 (mod n) is given.
+        //tmp = findDivisor(n, myRand(1,n)*eulerPhi(n));
+        tmp = findDivisor(n, e*f);
+        if(tmp <= 1){
+            continue;
+        }
+        // check whether tmp should be saved
+        bool added = false;
+        for(std::list<int>::iterator i = factors.begin(); i != factors.end(); ++i){
+            // when tmp is already in the list or is divisible
+            // by a factor in the list there is nothing to do
+            if(tmp == *i || tmp % *i == 0){
+                added = true;
+                break;
             }
-            // add factor to the list when above criteria don't hold
-            if(!added){
-                factors.push_back(tmp);
-                printf("factor added %d\n",tmp);
+            // if tmp divides a factor, the factor is replaced
+            if(*i % tmp == 0){
+                printf("factor %d replaced by %d\n", *i, tmp);
+                prodFacs = prodFacs / (*i);
                 prodFacs = prodFacs*tmp;
+                *i = tmp;
+                added = true;
+                break;
             }
         }
+        // add factor to the list when above criteria don't hold
+        if(!added){
+            factors.push_back(tmp);
+            printf("factor added %d\n",tmp);
+            prodFacs = prodFacs*tmp;
+        }
+
     }
     return 0;
 }
@@ -102,6 +117,10 @@ int gcd(int a, int b){
     return b;
 }
 
+/*
+ * naive implementation, here only for test purpose and not used
+ * in the solution for the exercise
+ */
 int eulerPhi(int n){
     int res = 0;
     for(int i = 1; i <= n; i++){
