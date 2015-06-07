@@ -1,5 +1,8 @@
 module ChineseRemainderTheorem where
 
+-- output: 529475129
+-- third root of output: 0809 -> HI
+
 main :: IO()
 main = print $ crt [(865, 913), (58, 589), (1168,1403)]
 
