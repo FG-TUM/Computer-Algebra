@@ -13,7 +13,7 @@ int myRand(int min, int max);
  * solution:
  * n = 48007 = 61*787
  *
- * Output when running:
+ * Output (most of the time):
  * factor added 61
  * factor added 787
  */
