@@ -9,13 +9,13 @@ pollard n gen = pollardX n (fst $ randomR (0, (n-1)) gen)
 pollardX :: Integer -> Integer -> Maybe Integer
 pollardX n x
   | x >= n = Nothing  -- FAIL
-  | otherwise = pollardAux n (mod (x^2 +1) n) ((x^2 +1)^2 +1)
+  | otherwise = pollardAux n (mod (x^2 +1) n) (mod((x^2 +1)^2 +1) n)
 
 pollardAux :: Integer -> Integer -> Integer -> Maybe Integer
 pollardAux n x y
   | 1 < d && d < n  = Just d
   | d == n          = Nothing --FAIL no conclusion. Maybe run again with different x
-  | otherwise       = pollardAux n (mod (x^2 +1) n) ((y^2 +1)^2 +1)
+  | otherwise       = pollardAux n (mod (x^2 +1) n) (mod((y^2 +1)^2 +1) n)
   where d = gcd n (x-y)
 
 -- task: factorize 23802996783967
