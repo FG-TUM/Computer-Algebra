@@ -1,6 +1,6 @@
 import System.Random
 
--- determines a propper divisor a of n using a random value x in {0..(n-1)}
+-- determines a proper divisor a of n using a random value x in {0..(n-1)}
 -- randomized version
 pollard :: Integer -> StdGen -> Maybe Integer
 pollard n gen = pollardX n (fst $ randomR (0, (n-1)) gen)
